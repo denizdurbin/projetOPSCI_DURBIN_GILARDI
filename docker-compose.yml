@@ -1,0 +1,58 @@
+version: '3'
+
+services:
+  strapi-pg:
+    image: postgres:latest
+    container_name: strapi-pg
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: atlas
+      POSTGRES_PASSWORD: d2d3d4d5
+      POSTGRES_DB: atlas
+    volumes:
+      - strapi-pg-data:/var/lib/postgresql/data
+    networks:
+      - strapi-network
+
+  projet-strapi:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: projet-strapi
+    restart: unless-stopped
+    ports:
+      - "1337:1337"
+    depends_on:
+      - strapi-pg
+    environment:
+      DATABASE_HOST: strapi-pg
+      DATABASE_PORT: 5432
+      DATABASE_NAME: atlas
+      DATABASE_USERNAME: atlas
+      DATABASE_PASSWORD: d2d3d4d5
+      APP_KEYS: tkUxVxaVpMdXNvxaT3vYeQ==,ty0OBksAytZ9pTOgo869wA==,wFdaoyfIHv2crwgKCX4QuQ==,PD4nGLD9uq/O4cINsNj6/A==
+      API_TOKEN_SALT: eTlbJKVsNAiC0G2B3NIPPg==
+      ADMIN_JWT_SECRET: 29ZhYRPE6re8Zhk4pPwDkA==
+      TRANSFER_TOKEN_SALT: 1kPRpuPovj0sRUemm9r0Ng==
+    networks:
+      - strapi-network
+
+  strapi-frontend:
+    build:
+      context: ./opsci-strapi-frontend
+      dockerfile: Dockerfile
+    container_name: strapi-frontend 
+    ports:
+      - "3000:3000"
+    depends_on:
+      - projet-strapi
+    networks:
+      - strapi-network
+
+
+volumes:
+  strapi-pg-data:
+
+networks:
+  strapi-network:
+    driver: bridge
