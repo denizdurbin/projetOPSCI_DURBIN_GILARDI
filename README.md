@@ -52,7 +52,7 @@ Le docker-compose est responsable de lier ces différents conteneurs ensemble, f
 
 Description du docker-compose
 
-Le fichier docker-compose définit les trois services qui composent votre application :
+Le fichier docker-compose définit les trois services qui composent notre application :
 
     strapi-pg :
         Utilise l'image Docker PostgreSQL la plus récente.
